@@ -1,0 +1,247 @@
+﻿<Window x:Class="Uninstaller.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ff="clr-namespace:Uninstaller.Utils"
+        xmlns:local="clr-namespace:Uninstaller.ViewModel"
+        Title="Uninstaller"
+        Width="525"
+        Height="689"
+        MinWidth="525"
+        MinHeight="480"
+        Background="#FFAAAAAA"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Uninstaller;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="/Uninstaller;component/Themes/Templates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <TextBlock x:Name="textTitle"
+                   Height="18.96"
+                   Margin="10,10,90,0"
+                   VerticalAlignment="Top"
+                   FontWeight="Bold"
+                   Text="{Binding TextTitle}"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap" />
+        <TextBlock x:Name="version"
+                   Height="18.96"
+                   Margin="432,10,10,0"
+                   VerticalAlignment="Top"
+                   Text="{Binding Version}"
+                   TextAlignment="Right"
+                   TextWrapping="Wrap" />
+        <GroupBox Height="60.96"
+                  Margin="10,33.96,10,0"
+                  VerticalAlignment="Top"
+                  Header="Учетные данные с правами администратора">
+            <Grid Margin="0,0,-2,-12.96">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="244*" />
+                    <ColumnDefinition Width="243*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Width="36.197"
+                           Height="23"
+                           Margin="10,10,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="Логин:"
+                           TextWrapping="Wrap" />
+                <TextBox x:Name="textLogin"
+                         Height="23"
+                         Margin="51.197,10,10,0"
+                         VerticalAlignment="Top"
+                         IsEnabled="{Binding IsEnableLogin}"
+                         Text="{Binding Login,
+                                        Mode=TwoWay}"
+                         TextWrapping="NoWrap" />
+                <TextBlock Grid.Column="1"
+                           Width="47.21"
+                           Height="23"
+                           Margin="8.197,10,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Text="Пароль:"
+                           TextWrapping="Wrap" />
+                <PasswordBox Grid.Column="1"
+                             Height="23"
+                             Margin="60.407,10,10,0"
+                             VerticalAlignment="Top"
+                             IsEnabled="{Binding IsEnablePass}"
+                             ff:PasswordHelper.Attach="True"
+                             ff:PasswordHelper.Password="{Binding Path=Password,
+                                                                  Mode=TwoWay,
+                                                                  UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="gbPC"
+                  Height="125"
+                  Margin="10,100,10,0"
+                  VerticalAlignment="Top"
+                  Header="Компьютер"
+                  IsEnabled="{Binding IsEnableSelectPC}">
+            <Grid Margin="0,0,-2,-12">
+                <RadioButton x:Name="rbLocalPC"
+                             Margin="10,10,10,0"
+                             VerticalAlignment="Top"
+                             Content="Локальный"
+                             IsChecked="True" />
+                <RadioButton x:Name="rbRemotePC"
+                             Margin="10,31,10,0"
+                             VerticalAlignment="Top"
+                             Content="Удалённый"
+                             IsChecked="{Binding IsRemoteMode,
+                                                 Mode=TwoWay}" />
+                <TextBox x:Name="remoteHostName"
+                         Height="23"
+                         Margin="10,52,10,0"
+                         VerticalAlignment="Top"
+                         IsEnabled="{Binding IsEnableRemoteHostName,
+                                             Mode=OneWay}"
+                         Text="{Binding RemoteHost,
+                                        UpdateSourceTrigger=PropertyChanged,
+                                        Mode=TwoWay}"
+                         TextWrapping="NoWrap">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding BtConnectToRemPC_click}" />
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button x:Name="btConnectToRemPC"
+                        Width="130"
+                        Height="22"
+                        Margin="0,80,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Command="{Binding BtConnectToRemPC_click}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16"
+                               Height="16"
+                               Margin="0,0,5,0"
+                               Source="/Uninstaller;component/Resources/computer_info.ico" />
+                        <TextBlock Text="Подключиться" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="10,230,10,62" Header="Установленное ПО">
+            <Grid Margin="0,0,-2,-2.96">
+                <ff:WatermarkedTextBox x:Name="textSearch"
+                                       Height="22"
+                                       Margin="10,10,115,0"
+                                       VerticalAlignment="Top"
+                                       IsEnabled="{Binding IsEnableSearchFiel}"
+                                       Text="{Binding FilterText,
+                                                      UpdateSourceTrigger=PropertyChanged}"
+                                       TextWrapping="NoWrap"
+                                       ToolTip="Поиск ПО по названию" />
+                <Button x:Name="btDelSoft"
+                        Width="100"
+                        Margin="0,10,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Command="{Binding On_btDelSoft_click}"
+                        IsEnabled="{Binding DelButtonIsEnable}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Width="16"
+                                   Height="16"
+                                   Margin="0,0,5,0"
+                                   Source="/Uninstaller;component/Resources/soft_delete.ico" />
+                            <TextBlock Text="Удалить" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <ListView x:Name="listInstalledSoft"
+                          Margin="10,36.96,10,10"
+                          IsSynchronizedWithCurrentItem="True"
+                          ItemsSource="{Binding InstalledSoftView}"
+                          SelectedIndex="{Binding SelectedListIndex,
+                                                  Mode=TwoWay}"
+                          SelectedItem="{Binding SelectedListItem,
+                                                 Mode=TwoWay}"
+                          SelectionMode="Single">
+                    <ListView.Style>
+                        <Style TargetType="{x:Type ListBox}">
+                            <Style.Triggers>
+                                <Trigger Property="ItemsSource" Value="{x:Null}">
+                                    <Setter Property="Template" Value="{StaticResource LoadControlTemplate}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.Style>
+                    <ListView.ContextMenu>
+                        <ContextMenu x:Name="ListInstalledPO"
+                                     Background="WhiteSmoke"
+                                     StaysOpen="true">
+                            <ContextMenu.BitmapEffect>
+                                <BitmapEffectGroup />
+                            </ContextMenu.BitmapEffect>
+                            <MenuItem x:Name="CopyUninstallStrContextMenu"
+                                      Command="{Binding CopyUninstallStrCommand}"
+                                      Header="Копировать строку удаления" />
+                            <MenuItem x:Name="CopyNamePOContextMenu"
+                                      Command="{Binding CopyNameCommand}"
+                                      Header="Копировать Название ПО" />
+                            <Separator />
+                            <MenuItem x:Name="DelSoftContextMenu"
+                                      Command="{Binding On_btDelSoft_click}"
+                                      Header="Удалить ПО"
+                                      IsEnabled="{Binding DelButtonIsEnable}" />
+                        </ContextMenu>
+                    </ListView.ContextMenu>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn>
+                                <GridViewColumnHeader Command="{Binding SortCommand}"
+                                                      CommandParameter="Name"
+                                                      Content="Название ПО" />
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Width="16"
+                                                   Height="16"
+                                                   Source="{Binding Icon}" />
+                                            <TextBlock Text="{Binding Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Version}">
+                                <GridViewColumnHeader Command="{Binding SortCommand}"
+                                                      CommandParameter="Version"
+                                                      Content="Версия" />
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding UninstallString}">
+                                <GridViewColumnHeader Command="{Binding SortCommand}"
+                                                      CommandParameter="UninstallString"
+                                                      Content="Строка удаления" />
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+        <Button x:Name="btClose"
+                Width="100"
+                Margin="0,0,10,35"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Command="{Binding On_btClose_click}">
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <Image Width="16"
+                           Height="16"
+                           Margin="0,0,5,0"
+                           Source="/Uninstaller;component/Resources/cancel.ico" />
+                    <TextBlock x:Name="textbtConnect" Text="Закрыть" />
+                </StackPanel>
+            </Button.Content>
+        </Button>
+        <StatusBar Height="30" VerticalAlignment="Bottom">
+            <Label x:Name="statusText" Content="{Binding StatusText}" FontSize="10" />
+        </StatusBar>
+    </Grid>
+</Window>
